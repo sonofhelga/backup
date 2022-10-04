@@ -1,10 +1,12 @@
 #!/bin/bash
 
+# directories that will be copied
 directories=('/boot' '/lib' '/etc' '/root' '/var' '/usr/local/bin' '/usr/local/sbin' '/srv' '/opt')
+
+# where to save local backup
 storage=('/home/loki/Storage/local_backup')
 
-
-# simple copy function and list of directories
+# simple copy function
 function copy_dir(){
 sudo rsync -av $1 $storage/
 }
@@ -19,6 +21,8 @@ else
     sudo chown loki $storage
 fi
 
+
+# copying each entry from directories
 for i in "${directories[@]}" ;
 
 do
@@ -30,11 +34,8 @@ done
 sudo rsync -av /home --exclude '/home/loki/.local/share/lutris' --exclude '/home/loki/.local/share/Steam'  --exclude '/home/loki/.cache' --exclude '/home/loki/.wine' --exclude '/home/loki/.lutris'--exclude '/home/loki/.local/share/lutris' --exclude '/home/loki/Games'  --exclude '/home/loki/Storage' $storage/local_backup/ ;
 
 
-# create tar file and clean up
+# create tar file from updated backup
 sudo tar -cvf $storage-$(date +"%m-%d").tar.zip $storage
-
-sudo rm -rf /home/loki/Storage/local_backup-$(date +"%m-%d")
-sudo rm -rf 
 
 clear
 echo "backup is finished."
